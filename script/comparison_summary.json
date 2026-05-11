@@ -1,0 +1,52 @@
+{
+  "models": {
+    "DP Reorderer": {
+      "model": "DP Reorderer",
+      "n": 147,
+      "MA": {
+        "mean": 0.9993,
+        "std": 0.0082
+      },
+      "SP": {
+        "mean": 0.9832,
+        "std": 0.0197
+      },
+      "G": {
+        "mean": 0.1382,
+        "std": 0.0174
+      }
+    },
+    "GRU Attention": {
+      "model": "GRU Attention",
+      "n": 147,
+      "MA": {
+        "mean": 0.5476,
+        "std": 0.2631
+      },
+      "SP": {
+        "mean": 0.2622,
+        "std": 0.0908
+      },
+      "G": {
+        "mean": 0.0971,
+        "std": 0.0054
+      }
+    },
+    "Claude LLM": {
+      "model": "Claude LLM",
+      "n": 147,
+      "MA": {
+        "mean": 0.868,
+        "std": 0.16
+      },
+      "SP": {
+        "mean": 0.854,
+        "std": 0.102
+      },
+      "G": {
+        "mean": 0.1475,
+        "std": 0.0246
+      }
+    }
+  }
+}
