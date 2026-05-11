@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeterMind: Symbolic vs Learned Approaches to Metrical Compression</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --text: #1a1a1a; --subtext: #555; --border: #e0e0e0;
+      --bg: #ffffff; --code-bg: #f7f7f7; --max-width: 740px;
+    }
+    body { font-family: 'Merriweather', Georgia, serif; font-size: 17px; line-height: 1.8; color: var(--text); background: var(--bg); }
+    nav { border-bottom: 1px solid var(--border); padding: 14px 0; }
+    nav .inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 24px; }
+    nav a { font-family: 'Source Sans 3', sans-serif; font-size: 13px; font-weight: 600; color: var(--subtext); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; }
+    nav a:first-child { color: var(--text); }
+    nav a:hover { color: var(--text); }
+    main { max-width: var(--max-width); margin: 0 auto; padding: 60px 24px 100px; }
+    .post-header { margin-bottom: 48px; }
+    .post-meta { font-family: 'Source Sans 3', sans-serif; font-size: 13px; color: var(--subtext); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 16px; }
+    h1 { font-size: 2rem; font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; margin-bottom: 20px; }
+    .abstract { font-family: 'Source Sans 3', sans-serif; font-size: 16px; line-height: 1.7; color: var(--subtext); border-left: 3px solid var(--border); padding-left: 20px; margin-top: 24px; }
+    .authors { font-family: 'Source Sans 3', sans-serif; font-size: 14px; color: var(--subtext); margin-top: 8px; }
+    .toc { margin: 48px 0; padding: 24px 28px; border: 1px solid var(--border); border-radius: 2px; }
+    .toc-title { font-family: 'Source Sans 3', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--subtext); margin-bottom: 12px; }
+    .toc ol { padding-left: 20px; }
+    .toc li { font-family: 'Source Sans 3', sans-serif; font-size: 14px; margin-bottom: 6px; }
+    .toc a { color: var(--text); text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    section { margin-bottom: 56px; }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 20px; margin-top: 56px; padding-top: 56px; border-top: 1px solid var(--border); }
+    h3 { font-family: 'Source Sans 3', sans-serif; font-size: 1rem; font-weight: 600; margin: 28px 0 10px; letter-spacing: 0.01em; }
+    p { margin-bottom: 20px; }
+    p:last-child { margin-bottom: 0; }
+    figure { margin: 40px 0; text-align: center; }
+    figure img { max-width: 100%; border: 1px solid var(--border); }
+    figcaption { font-family: 'Source Sans 3', sans-serif; font-size: 13px; color: var(--subtext); margin-top: 10px; line-height: 1.5; }
+    .table-wrap { overflow-x: auto; margin: 32px 0; }
+    table { width: 100%; border-collapse: collapse; font-family: 'Source Sans 3', sans-serif; font-size: 14px; }
+    th { text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--text); font-weight: 600; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    .best { font-weight: 600; }
+    code { font-family: 'Source Code Pro', monospace; font-size: 0.85em; background: var(--code-bg); padding: 2px 5px; border-radius: 2px; }
+    .poem-block { font-family: 'Merriweather', serif; font-style: italic; font-size: 15px; line-height: 2; border-left: 3px solid var(--border); padding: 16px 24px; margin: 28px 0; color: var(--subtext); }
+    .demo-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: 2px; padding: 20px 24px; margin: 28px 0; font-family: 'Source Code Pro', monospace; font-size: 13px; line-height: 1.9; }
+    .demo-block .label { font-weight: 600; min-width: 80px; display: inline-block; color: var(--text); }
+    .demo-block .score { color: var(--subtext); font-size: 11px; margin-left: 8px; }
+    .demo-input { font-style: italic; margin-bottom: 10px; color: var(--subtext); font-family: 'Merriweather', serif; font-size: 13px; }
+    .formulation { background: var(--code-bg); border-left: 3px solid var(--text); padding: 16px 20px; margin: 24px 0; font-family: 'Source Code Pro', monospace; font-size: 13.5px; line-height: 2; }
+    .finding-box { border: 1px solid var(--border); border-left: 3px solid var(--text); padding: 16px 20px; margin: 28px 0; font-family: 'Source Sans 3', sans-serif; font-size: 15px; line-height: 1.7; }
+    .finding-box strong { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--subtext); margin-bottom: 6px; }
+    .references { margin-top: 64px; border-top: 1px solid var(--border); padding-top: 32px; }
+    .references h2 { border-top: none; margin-top: 0; padding-top: 0; }
+    .references ol { padding-left: 20px; font-family: 'Source Sans 3', sans-serif; font-size: 14px; line-height: 1.7; }
+    .references li { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="inner">
+    <a href="#">Applied ML — Final Project</a>
+    <a href="#methods">Methods</a>
+    <a href="#results">Results</a>
+    <a href="#analysis">Analysis</a>
+  </div>
+</nav>
+
+<main>
+
+  <header class="post-header">
+    <p class="post-meta">Applied Machine Learning &nbsp;·&nbsp; Spring 2026</p>
+    <h1>MeterMind: Symbolic vs Learned Approaches to Metrical Compression in Iambic Pentameter</h1>
+    <p class="authors">Andrew Li, Alexandra Jing</p>
+    <div class="abstract">
+      We investigate whether symbolic rule-based constraint-solving, learned neural sequence models, or large pretrained language models best handle the task of metrical compression — taking expanded archaic prose and rewriting it into iambic pentameter. Using Shakespeare's 154 sonnets as a corpus, we train and evaluate three models (a DP reorderer, a GRU with Bahdanau attention, and Claude Haiku) on three metrics: Metrical Accuracy (MA), Semantic Preservation (SP), and Grammaticality (G). We find that the symbolic DP reorderer leads on Metrical Accuracy (MA = 0.9996 ± 0.0064) and Semantic Preservation (SP = 0.9847 ± 0.0207) by construction, while Claude Haiku achieves the strongest Grammaticality score (G = 0.1475 ± 0.0246) and competitive MA (0.8680 ± 0.1600) and SP (0.8540 ± 0.1020) with no task-specific training. The GRU with Bahdanau attention substantially underperforms both baselines across all metrics (MA = 0.5476, SP = 0.2622, G = 0.0971), potentially reflecting severe overfitting on a dataset of only 1,164 training pairs.
+    </div>
+  </header>
+
+  <nav class="toc">
+    <p class="toc-title">Contents</p>
+    <ol>
+      <li><a href="#intro">Introduction</a></li>
+      <li><a href="#related">Related Work</a></li>
+      <li><a href="#formulation">Problem Formulation</a></li>
+      <li><a href="#data">Dataset</a></li>
+      <li><a href="#methods">Methods</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#ablations">Ablations</a></li>
+      <li><a href="#analysis">Analysis</a></li>
+      <li><a href="#demo">Qualitative Demo</a></li>
+      <li><a href="#limitations">Limitations</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+      <li><a href="#references">References</a></li>
+    </ol>
+  </nav>
+
+  <section id="intro">
+    <h2>1. Introduction</h2>
+    <p>Iambic pentameter, the <em>da-DUM da-DUM da-DUM da-DUM da-DUM</em> rhythm of Shakespeare, Milton, and Keats, is one of the most studied metrical forms in English literature. Its ten-syllable alternating stress pattern is simple to define but surprisingly difficult to produce. This tension makes iambic pentameter a compelling testbed for machine learning. The task requires simultaneously satisfying a hard phonological constraint (stress pattern), a soft semantic constraint (preserve meaning), and an implicit fluency constraint (sound like natural language). These three objectives often pull in different directions.</p>
+    <p>We frame the problem as <em>metrical compression</em>: given an expanded archaic prose version of a Shakespeare sonnet line — containing all the original words plus filler — can a model recover the compressed, metrically regular original? This controlled setup lets us isolate the metrical learning signal from the confound of vocabulary or register translation.</p>
+    <p>Our central hypothesis is: <strong>symbolic stress constraints outperform learned approaches on Metrical Accuracy, but underperform on Semantic Preservation and Grammaticality, because explicit rule-following cannot model the contextual trade-offs that learned models capture.</strong> </p>
+  </section>
+
+  <section id="related">
+    <h2>2. Related Work</h2>
+    <h3>Poetry generation with formal constraints</h3>
+    <p>Generating formal verse poetry with strict constraints on meter, rhyme, and alliteration has been a long-standing challenge in NLP. The most directly relevant prior work is ByGPT5 (Belouadi &amp; Eger, 2023), which argues for end-to-end style-conditioned poetry generation without hand-crafted constraints. The authors identify two failure modes of prior end-to-end attempts: insufficient training data, and a mismatch between subword tokenization and character-level poetic styles such as meter and rhyme. Their solution is ByGPT5, a token-free decoder-only transformer pre-trained at the byte level and fine-tuned on QuaTrain, a machine-labeled corpus of over 2.7 million English quatrains. ByGPT5 outperforms GPT-2, mT5, and ChatGPT on meter, rhyme, and alliteration scores, and achieves performance comparable to human poets on meter in human evaluation. Crucially, Belouadi and Eger find that meter — being a syllable-level style — is learnable by subword models too, but that token-free models have a systematic advantage. Their finding that end-to-end approaches can match symbolic pipelines on meter directly motivates our investigation: we ask whether this holds when the vocabulary is severely constrained (archaic Shakespearean English) and the task is framed as compression rather than open-ended generation.</p>
+    <h3>Seq2seq with attention</h3>
+    <p>Our Model 2 is built on the encoder-decoder framework with Bahdanau attention (Bahdanau, Cho &amp; Bengio, 2015), the foundational architecture for learned sequence-to-sequence transduction. Bahdanau et al. identified a critical bottleneck in the basic encoder-decoder approach: compressing a variable-length source into a single fixed-length vector degrades performance on long sequences. Their solution — allowing the decoder to compute a soft alignment over all encoder hidden states at each generation step — is particularly well-motivated for our reordering task. When generating position <em>i</em> of the output, the attention mechanism can in principle learn to focus on whichever input word belongs at that position, effectively learning a soft permutation. This maps directly onto what our symbolic DP reorderer does explicitly, making the attention GRU a natural learned counterpart to the rule-based baseline.</p>
+    <h3>Constrained text generation</h3>
+    <p>A consistent finding across poetry generation literature is that unconstrained neural models struggle to satisfy hard phonological constraints from data alone. Hopkins and Kiela (2017) used Weighted Finite State Transducers to enforce metric constraints and roll back generation on violations. Van de Cruys (2020) modified output probability distributions directly to bias generation toward desired stress patterns. Our copy mask — which restricts the GRU decoder's output vocabulary to words present in the source input — is a form of hard lexical constraint at inference time. Belouadi and Eger (2023) note that such prior knowledge injection, while effective, introduces cascading errors when constraints interact and limits the model's ability to learn holistic trade-offs. Our Ablation 2 directly tests this: the copy mask, designed to preserve meaning, actively harmed output quality by interacting destructively with the repetition penalty.</p>
+    <h3>Computational meter and the CMU Pronouncing Dictionary</h3>
+    <p>Automated metrical analysis relies on mapping orthographic words to their phonemic stress patterns. The standard tool for this in English NLP is the CMU Pronouncing Dictionary, a hand-compiled lexicon of over 125,000 words with phonetic transcriptions encoding primary stress (1), secondary stress (2), and unstressed (0) syllables (Mehra &amp; Susan, 2020). We use CMU as the backbone of our Metrical Accuracy metric and our DP reorderer. A known limitation, directly relevant to our corpus, is that CMU covers modern English and is incomplete for archaic verb forms. Words like <em>feedest</em> and <em>makest</em> — produced by our elision expansion pipeline — are absent from CMU, requiring a fallback strategy of stripping the archaic <em>-est</em> and <em>-eth</em> suffixes and looking up the verbal root.</p>
+    <h3>Evaluation metrics: semantic similarity and grammaticality</h3>
+    <p>Our Semantic Preservation metric uses cosine similarity between SBERT embeddings (Reimers &amp; Gurevych, 2019). Standard BERT embeddings are unsuitable for this purpose: Reimers and Gurevych demonstrate that averaging BERT output layers yields an average Spearman correlation of only 54.81 on semantic textual similarity tasks — worse than averaging GloVe embeddings. SBERT addresses this by fine-tuning BERT in a siamese network architecture on natural language inference data, achieving an average Spearman correlation of 74.89 across seven STS benchmarks, outperforming prior sentence embedding methods by 11.7 points.</p>
+    <p>Our Grammaticality metric uses GPT-2 perplexity (Radford et al., 2019), normalised as <em>G = 1 / (1 + log(perplexity))</em>. We acknowledge a known limitation: GPT-2 was trained on modern English and will systematically assign higher perplexity to archaic register regardless of grammatical correctness within Early Modern English. This means our G scores may underestimate the true fluency of model outputs that successfully preserve Shakespearean register.</p>
+    <h3>Pretrained LLMs as a comparison point</h3>
+    <p>Our three models represent three fundamentally different paradigms: symbolic rule-following (DP), task-specific learning from examples (GRU), and implicit knowledge transfer from pretraining (Claude). The third paradigm tests a key question: does broad exposure to text including poetry — without any task-specific training — transfer to a highly constrained structured generation task? Claude Haiku, prompting zero-shot, provides a natural upper-bound comparison for both the symbolic and learned baselines.</p>
+  </section>
+
+  <section id="formulation">
+    <h2>3. Problem Formulation</h2>
+    <p>We define the task as a sequence-to-sequence mapping. Let <em>x</em> be an expanded archaic prose line and <em>y</em> be the corresponding compressed Shakespeare line. All words in <em>y</em> appear verbatim in <em>x</em>; <em>x</em> may contain additional filler words added to make the expansion read naturally.</p>
+    <div class="formulation">
+      Input  x : "Thou feedest thy light's own flame with fuel that is self-substantial"<br>
+      Output y : "Feedest thy light's flame with self-substantial fuel"<br><br>
+      Objective : learn f : x → y that maximises MA while preserving SP and G
+    </div>
+    <p>We evaluate all models on three metrics:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Metric</th><th>Definition</th><th>Range</th></tr></thead>
+        <tbody>
+          <tr><td><strong>MA</strong> — Metrical Accuracy</td><td>Fraction of template syllable positions correctly filled, using CMU stress patterns. Monosyllabic stressed words treated as positionally flexible.</td><td>[0, 1]</td></tr>
+          <tr><td><strong>SP</strong> — Semantic Preservation</td><td>Cosine similarity between SentenceTransformer embeddings of tokenised input and output, clamped to [0, 1].</td><td>[0, 1]</td></tr>
+          <tr><td><strong>G</strong> — Grammaticality</td><td>Normalised GPT-2 perplexity: 1 / (1 + log(perplexity)), computed per-sequence.</td><td>(0, 1]</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="data">
+    <h2>4. Dataset</h2>
+    <p>We use Shakespeare's 154 sonnets from Project Gutenberg as our poetry corpus. After stripping Gutenberg headers and Roman numeral sonnet headings, the corpus yields 2,155 lines. Elisions common in Early Modern English (<em>Feed'st</em>, <em>distill'd</em>, <em>o'er</em>) were expanded to their full forms using 14 regex rules operating on Unicode-normalised text, producing a clean line corpus with no apostrophe contractions.</p>
+    <p>Each line was then expanded into three distinct archaic prose paraphrases using Claude Haiku via the Anthropic API. The prompt required all original words to appear verbatim in the expansion while preserving archaic register (thee, thou, doth, hath). Expansions failing word-presence validation were retried and discarded if still invalid, yielding <strong>1,455 valid (input, target) pairs</strong> out of 6,465 attempted — roughly two-thirds failed validation, most likely because the model consistently dropped small function words like <em>a</em>, <em>the</em>, and <em>in</em> from expansions. The dataset was split 80/10/10 on unique target lines to prevent data leakage across splits.</p>
+    <div class="poem-block">
+      Original: "Feed'st thy light's flame with self-substantial fuel,"<br>
+      Expanded (1): "Thou feedest thy light's own flame with fuel that is self-substantial,"<br>
+      Expanded (2): "And feedest the flame of thy light with fuel that is self-substantial,"<br>
+      Expanded (3): "Feedest thou thy light's own flame with self-substantial fuel alone,"
+    </div>
+  </section>
+
+  <section id="methods">
+    <h2>5. Methods</h2>
+    <h3>Model 1 — Rule-Based DP Reorderer</h3>
+    <p>Our symbolic baseline uses the CMU Pronouncing Dictionary to look up the stress pattern of each input word, then applies bitmask dynamic programming to find the globally optimal word ordering with respect to the iambic template <code>[0,1,0,1,0,1,0,1,0,1]</code>. Monosyllabic stressed words are treated as positionally flexible. Archaic verb forms not in CMU (<em>feedest</em>, <em>knoweth</em>) are handled by stripping the <em>-est</em> or <em>-eth</em> suffix and looking up the root. The DP is capped at 20 words for tractability; words placed beyond the 10-syllable template boundary score 0 but are still placed, ensuring no fallback to the original order.</p>
+    <h3>Model 2 — GRU Encoder-Decoder with Bahdanau Attention</h3>
+    <p>Our learned baseline is a PyTorch seq2seq model with a single-layer GRU encoder and a single-layer GRU decoder with Bahdanau attention. The encoder produces a hidden state at every input position; at each decoder step, attention computes a weighted sum of encoder states to form a context vector. We use embedding dimension 128, hidden dimension 256, dropout 0.3, teacher forcing ratio 0.5, and train for 50 epochs with Adam (lr=0.001) and gradient clipping at 1.0. At inference, a repetition penalty discourages reuse of already-generated tokens. Two inference variants are evaluated: with and without a copy mask restricting output to source vocabulary.</p>
+    <h3>Model 3 — Claude Haiku (Zero-Shot LLM)</h3>
+    <p>Our third model prompts Claude Haiku zero-shot with a structured instruction: use only input words, preserve archaic register, aim for the <em>da-DUM da-DUM</em> pattern, return only the rewritten line. No examples are provided. This tests whether a large pretrained model's implicit knowledge of English poetry and prosody transfers to this task without any task-specific training.</p>
+  </section>
+
+  <section id="results">
+    <h2>6. Results</h2>
+    <p>All three models were evaluated on 147 shared test pairs. Model 1 originally ran on the full 1,455 pairs but was filtered to the same 147 for a fair comparison.</p>
+
+    <figure>
+      <img src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/comparison_bar.png" alt="Bar chart model comparison">
+      <figcaption>Figure 2. Mean MA, SP, and G scores (± std) across all three models on 147 shared test pairs. Error bars show ± 1 std. The DP and Claude substantially outperform the GRU on MA and SP; all three models score similarly and low on G.</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>MA ↑</th><th>SP ↑</th><th>G ↑</th></tr></thead>
+        <tbody>
+          <tr><td>DP Reorderer</td><td class="best">0.9996 ± 0.0064</td><td class="best">0.9847 ± 0.0207</td><td>0.1387 ± 0.0175</td></tr>
+          <tr><td>GRU + Attention</td><td>0.5476 ± 0.2631</td><td>0.2622 ± 0.0908</td><td>0.0971 ± 0.0054</td></tr>
+          <tr><td>Claude Haiku</td><td>0.8680 ± 0.1600</td><td>0.8540 ± 0.1020</td><td class="best">0.1475 ± 0.0246</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="finding-box">
+      <strong>Key finding</strong>
+      Zero-shot prompting of a large pretrained LLM substantially outperforms a task-specifically trained GRU on MA and SP. The symbolic DP leads on both by construction, but at the cost of naturalness. The trained neural model ranks last — raising questions about dataset size, the copy mask design, and the ceiling of task-specific training on small corpora.
+    </div>
+
+   <figure>
+  <img 
+    src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/comparison_radar.png"
+    alt="Radar chart model profiles"
+    style="max-width:90%; display:block; margin:auto;"
+  >
+
+  <figcaption>
+    Figure 3. Radar chart showing each model's profile across MA, SP, and G. The DP and Claude fill most of the upper triangle; the GRU's small polygon reflects low scores across all three metrics.
+  </figcaption>
+</figure>
+</section>
+
+  <section id="ablations">
+    <h2>7. Ablations</h2>
+
+    <h3>Ablation 1 — Attention vs No Attention</h3>
+    <p>To test whether the attention mechanism contributes meaningfully to the GRU's performance, we trained an identical model replacing the Bahdanau attention decoder with a plain decoder that receives only the encoder's final hidden state.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>MA ↑</th><th>SP ↑</th><th>G ↑</th></tr></thead>
+        <tbody>
+          <tr><td>GRU + Attention</td><td class="best">0.5476</td><td class="best">0.2622</td><td>0.0971</td></tr>
+          <tr><td>Plain GRU (no attention)</td><td>0.2612</td><td>0.2134</td><td class="best">0.1289</td></tr>
+          <tr><td>Delta</td><td>+0.2864</td><td>+0.0488</td><td>−0.0318</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Attention wins decisively on MA (+0.2864) and meaningfully on SP (+0.0488). The plain GRU's marginally better G score is not a sign of higher quality: without attention, the model generates shorter, simpler, more modern-sounding sequences that happen to score lower perplexity under GPT-2. Both models exhibit severe overfitting: by epoch 50, training loss reaches 0.0569 while validation loss climbs to 8.36 for the plain GRU, confirming that 1,164 training pairs is insufficient for this task regardless of architecture.</p>
+
+<figure>
+  <img 
+    src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/Ablation1.png"
+    alt="Ablation 1 bar chart"
+    style="max-width:90%; display:block; margin:auto;"
+  >
+  <figcaption>
+    Figure 4. Ablation 1: GRU with attention vs plain GRU across MA, SP, and G. Attention wins on both MA (+0.2864) and SP (+0.0488); plain GRU's marginally better G (−0.0318) reflects shorter modern-sounding outputs rather than genuine fluency.
+  </figcaption>
+</figure>
+
+    <h3>Ablation 2 — Copy Mask On vs Off</h3>
+    <p>We re-ran GRU inference on the test set without the source vocabulary copy mask, allowing the model to generate any word in its vocabulary. No retraining was needed.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Inference</th><th>MA ↑</th><th>SP ↑</th><th>G ↑</th></tr></thead>
+        <tbody>
+          <tr><td>Without copy mask</td><td class="best">0.548</td><td class="best">0.262</td><td>0.097</td></tr>
+          <tr><td>With copy mask</td><td>0.333</td><td>0.248</td><td class="best">0.130</td></tr>
+          <tr><td>Delta (no mask − mask)</td><td>+0.215</td><td>+0.014</td><td>−0.033</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Removing the mask substantially improves both MA (+0.215) and SP (+0.014). The copy mask was intended to enforce meaning preservation by restricting generation to source vocabulary, but instead caused destructive early termination: the mask narrows the output distribution to source words, while the repetition penalty simultaneously penalises tokens already generated, leaving the end-of-sequence token as the highest-scoring option after just 2–3 words. Masked outputs degraded into fragments such as <code>"the as a"</code> and <code>"and by hath"</code> — formally compliant with the mask but semantically empty. This is a concrete instance of the constraint interaction failure mode identified by Belouadi &amp; Eger (2023): independently sensible decoding constraints can compose destructively.</p>
+
+
+
+  <figcaption>
+    Figure 5. Ablation 2: GRU without copy mask vs with copy mask. Removing the mask substantially improves MA and SP, confirming the destructive interaction between the mask and repetition penalty.
+  </figcaption>
+</figure>
+</section>
+
+  <section id="analysis">
+    <h2>8. Analysis</h2>
+    <p>The results reveal a clear three-way split that maps directly onto the architectural assumptions of each model.</p>
+
+    <h3>Why does the DP score near-perfectly on MA?</h3>
+    <p>The DP reorderer achieves MA = 0.9996 because it optimises directly for the iambic template via exhaustive bitmask search. However, two structural features of the dataset also inflate this score. First, the input lines are expansions of iambic pentameter targets, meaning the source vocabulary already contains words whose stress patterns fit the template. Second, archaic monosyllables like <em>thee</em>, <em>thou</em>, <em>thy</em>, <em>doth</em>, <em>hath</em> dominate the vocabulary and are treated as positionally flexible by the metric, making them trivially easy to place. DP's high MA may therefore overstate its usefulness on genuinely unstructured prose input.</p>
+
+    <h3>Why does the DP score high SP but low G?</h3>
+    <p>SP is guaranteed by construction: the DP never adds or removes words, so the output vocabulary is a strict subset of the input vocabulary, keeping cosine similarity between SentenceTransformer embeddings very high. Low G follows from the same mechanism. Globally optimal metric reordering can produce syntactically bizarre sequences — adjectives placed after nouns, verbs stranded from their subjects — that satisfy the stress template perfectly but violate English phrase-structure rules. GPT-2, which models syntactic and collocational probability, assigns high perplexity to these sequences even when they are technically grammatical in archaic register. DP's G = 0.1387 confirms that metric-optimal word order is not the same as linguistically natural word order.</p>
+
+    <h3>Why does the GRU score low SP despite being trained on the task?</h3>
+    <p>The GRU's SP = 0.2622 is the most striking failure. A model trained on (input, target) pairs should, in principle, learn to preserve meaning — the targets it is trained to produce are paraphrases of the inputs. The explanation is severe overfitting: with only 1,164 training pairs from a narrow stylistic domain, the model memorises surface patterns in the training set rather than learning a generalisable reordering function. At inference on unseen lines, it generates words that match learned stress-conditioned n-gram patterns but are semantically unrelated to the specific input. The attention ablation confirms that the attention mechanism mitigates this somewhat (+0.0488 SP), but cannot overcome the fundamental data scarcity problem.</p>
+
+    <h3>Why does Claude substantially outperform the GRU?</h3>
+    <p>Claude Haiku achieves MA = 0.8680 and SP = 0.8540 with zero task-specific training. The gap over the GRU (ΔMA = +0.3204, ΔSP = +0.5918) is large enough to qualify as a different regime of performance. Two factors explain this. First, pretraining scale: Claude has been exposed to vast quantities of English poetry, prosody guides, and Shakespearean text, giving it implicit phonological and metrical knowledge the GRU must learn from 1,164 examples. Second, the zero-shot prompt is semantically richer than the GRU's training signal — it explicitly encodes the da-DUM constraint, the copy-words requirement, and the register preservation goal in natural language. It must be noted, however, that Claude frequently violates the copy-words constraint, adding vocabulary not present in the input. This partially inflates its SP relative to a strict reordering baseline.</p>
+ <figure>
+  <img 
+    src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/claude_violations.png"
+    alt="Claude word constraint violations vs MA"
+    style="max-width:90%; display:block; margin:auto;"
+  >
+
+  <figcaption>
+    Figure 8. Claude word constraint violations vs MA. Most outputs add 0–5 words not in the input. High MA is achievable both with and without violations, suggesting Claude's metrical knowledge does not depend on adding new vocabulary — but the violations do undermine the task framing.
+  </figcaption>
+</figure>
+</section>
+
+    <h3>Why is G uninformative across all three models?</h3>
+    <p>All three models score G in the range 0.0971–0.1475 — a spread too narrow to draw meaningful conclusions. GPT-2 was trained on modern web text and assigns uniformly high perplexity to Early Modern English regardless of the grammatical quality of the specific output. A correctly formed Shakespearean clause like <em>"doth beauty's legacy bequeath"</em> scores similarly to a garbled fragment under GPT-2 because both are outside its training distribution. G is better understood as a measure of modernity than of grammaticality in this domain. Future work should replace GPT-2 with a language model fine-tuned on Early Modern English to obtain a more informative signal.</p>
+
+   
+
+   <img 
+  src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/comparison_distributions.png"
+  alt="Score distributions by model"
+  style="max-width:90%; display:block; margin:auto;"
+>
+
+<img 
+  src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/comparison_scatter.png"
+  alt="MA vs SP scatter"
+  style="max-width:90%; display:block; margin:auto;"
+  
+  
+  
+
+  <section id="demo">
+    <h2>9. Qualitative Demo</h2>
+    <p>We ran all three models on five lines drawn from Milton's <em>Areopagitica</em>, chosen to test performance on archaic philosophical prose outside the Shakespeare training domain.</p>
+
+<p>
+Demo results for Model 1
+   <img 
+  src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/miltonmodel1.png"
+  alt="Milton Model 1 Results"
+  style="max-width:90%; display:block; margin:auto;"
+>
+
+<p>
+Demo results for Model 2
+<img 
+  src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/miltonmodel2.png"
+  alt="Milton Model 2 Results"
+  style="max-width:90%; display:block; margin:auto;"
+>
+
+
+<p>
+Demo results for Model 3
+</p>
+
+<img 
+  src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/miltonmodel3__1.png"
+  style="max-width:90%; display:block; margin:auto;"
+>
+
+<img 
+  src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/miltonmodel3_5.png"
+  style="max-width:90%; display:block; margin:auto;"
+>
+
+<img 
+  src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/miltonmodel3_3.png"
+  style="max-width:90%; display:block; margin:auto;"
+>
+
+<img 
+  src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/miltonmodel3_3.png"
+  style="max-width:90%; display:block; margin:auto;"
+>
+
+<img 
+  src="https://raw.githubusercontent.com/al4211-rgb/ML_meterproject/main/src/models/miltonmodel3_4.png"
+  style="max-width:90%; display:block; margin:auto;"
+  
+>
+
+<p>
+All three models scored poorly on grammaticality overall, while Model 1 achieved the strongest metrical accuracy performance, which was expected given its explicit optimization for stress-pattern constraints.
+</p>
+  </section>
+
+  <section id="limitations">
+    <h2>10. Limitations</h2>
+    <p>Several limitations bound the scope of our conclusions. First, the dataset is small: 1,455 training pairs drawn from a single author's work limits generalisability. The roughly 77% validation filter failure rate during data generation — from 6,465 attempted expansions to 1,455 valid pairs — suggests the LLM expansion task is harder than anticipated and may have introduced systematic bias toward simpler lines whose function words were easier to preserve.</p>
+    <p>Second, the archaic vocabulary of the training corpus means the GRU's learned representations are narrow — performance on modern prose is expected to degrade significantly. The demo section illustrates this; the copy mask partially mitigates but does not eliminate out-of-vocabulary issues.</p>
+    <p>Third, the Grammaticality metric (GPT-2 perplexity) was trained on modern English and systematically disadvantages archaic outputs regardless of their actual linguistic quality within Early Modern English register. Future work should replace GPT-2 with a model fine-tuned on the Early English Books Online (EEBO) corpus.</p>
+    <p>Fourth, Claude's word constraint violations — adding vocabulary not in the input — were observed throughout evaluation but not controlled for. This means Claude's SP scores are not directly comparable to the DP and GRU, which are structurally prohibited from adding new words.</p>
+  </section>
+
+  <section id="conclusion">
+    <h2>11. Conclusion</h2>
+    <p>We set out to test whether symbolic rule-based constraint-solving, learned neural sequence models, or large pretrained language models best handle metrical compression into iambic pentameter. Our central hypothesis — that symbolic approaches would lead on Metrical Accuracy but underperform on Semantic Preservation and Grammaticality — was partially confirmed, but with a significant revision: the LLM baseline came far closer to the symbolic system than anticipated, while the learned GRU fell far below both.</p>
+    <p>The most surprising finding is the magnitude of Claude Haiku's zero-shot performance. With no task-specific training, Claude achieves SP = 0.854 — a result the GRU, trained on 1,164 (input, target) pairs, cannot approach. This suggests that for highly constrained structured generation tasks with small training sets, a prompted LLM is not merely a convenient baseline but a genuinely competitive method. The GRU result, meanwhile, illustrates how rapidly seq2seq models can overfit on narrow corpora: the model learns the stress register of Shakespearean English but not the meaning-preserving reordering function it is trained to perform.</p>
+    <p>Were we to repeat this project, we would focus on three changes. First, expand the dataset significantly — either by sourcing additional Early Modern English poetry or by using LLM-generated synthetic pairs more aggressively. Second, replace GPT-2 with a domain-appropriate language model fine-tuned on EEBO to obtain a meaningful Grammaticality signal. Third, investigate whether fine-tuning Claude on the task, rather than prompting it zero-shot, improves or hurts performance given the small dataset size.</p>
+    <p>Future work could extend this framework to other metrical forms — ballad meter, alexandrine, haiku syllabic constraints — to test whether the same paradigm rankings hold across constraint types. The metrical compression framing, where the target vocabulary is constrained to source words, also provides a clean experimental design that could be reused for studying other structured rewriting tasks.</p>
+  </section>
+
+  <div class="references">
+    <h2>References</h2>
+    <ol>
+      <li>Bahdanau, D., Cho, K., &amp; Bengio, Y. (2015). Neural Machine Translation by Jointly Learning to Align and Translate. <em>Proceedings of ICLR 2015</em>. arXiv:1409.0473.</li>
+      <li>Belouadi, J., &amp; Eger, S. (2023). ByGPT5: End-to-End Style-conditioned Poetry Generation with Token-free Language Models. <em>Proceedings of ACL 2023</em>, pp. 7364–7381.</li>
+      <li>Mehra, S., &amp; Susan, S. (2020). Improving Word Recognition in Speech Transcriptions by Decision-level Fusion of Stemming and Two-way Phoneme Pruning. <em>International Advanced Computing Conference (IACC)</em>.</li>
+      <li>Lau, J. H., Cohn, T., Baldwin, T., Brooke, J., &amp; Hammond, A. (2018). Deep-speare: A Joint Neural Model of Poetic Language, Meter and Rhyme. <em>Proceedings of ACL 2018</em>, pp. 1948–1958.</li>
+      <li>Hopkins, J., &amp; Kiela, D. (2017). Automatically Generating Rhythmic Verse with Neural Networks. <em>Proceedings of ACL 2017</em>, pp. 168–178.</li>
+      <li>Van de Cruys, T. (2020). Automatic Poetry Generation from Prosaic Text. <em>Proceedings of ACL 2020</em>, pp. 2471–2480.</li>
+      <li>Tian, Y., &amp; Peng, N. (2022). Zero-shot Sonnet Generation with Discourse-level Planning and Aesthetics Features. <em>Proceedings of NAACL 2022</em>, pp. 3587–3597.</li>
+      <li>Reimers, N., &amp; Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. <em>Proceedings of EMNLP-IJCNLP 2019</em>, pp. 3982–3992.</li>
+      <li>Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., &amp; Sutskever, I. (2019). Language Models are Unsupervised Multitask Learners. <em>OpenAI Blog</em>.</li>
+      <li>CMU Pronouncing Dictionary. Carnegie Mellon University. Available at: <a href="https://urldefense.com/v3/__http://www.speech.cs.cmu.edu/cgi-bin/cmudict__;!!BDUfV1Et5lrpZQ!UkkOPBC3CAs--jJyn854YvRlpjoNfVenBij1yOMopn4K86Ta5DuyRvrU2U37rhOAj3j0c-RgsmItWx5FLfS2-Xc3$">http://www.speech.cs.cmu.edu/cgi-bin/cmudict</a></li>
+    </ol>
+  </div>
+
+</main>
+</body>
+</html>
