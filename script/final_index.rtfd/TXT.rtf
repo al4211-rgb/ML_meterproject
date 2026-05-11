@@ -1,0 +1,666 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2638
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\fnil\fcharset0 Georgia-Bold;
+\f3\fnil\fcharset0 Georgia;\f4\fnil\fcharset0 Georgia-Italic;\f5\fnil\fcharset0 Menlo-Regular;
+\f6\froman\fcharset0 Times-Italic;\f7\fnil\fcharset0 LucidaGrande-Bold;\f8\fnil\fcharset0 LucidaGrande;
+\f9\fswiss\fcharset0 Helvetica-Oblique;}
+{\colortbl;\red255\green255\blue255;\red20\green20\blue20;\red67\green67\blue67;\red245\green245\blue245;
+\red217\green217\blue217;}
+{\*\expandedcolortbl;;\cssrgb\c10196\c10196\c10196;\cssrgb\c33333\c33333\c33333;\cssrgb\c96863\c96863\c96863;
+\cssrgb\c87843\c87843\c87843;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid1\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+{\info
+{\title MeterMind: Symbolic vs Learned Approaches to Metrical Compression}}\vieww15460\viewh14520\viewkind0
+\deftab720
+\pard\pardeftab720\sl468\partightenfactor0
+
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \cf2 \expnd0\expndtw0\kerning0
+APPLIED ML\
+\pard\pardeftab720\sl468\partightenfactor0
+\cf3 METHODS\
+RESULTS\
+ANALYSIS\
+\pard\pardeftab720\sl468\sa320\partightenfactor0
+
+\f1\b0 \AppleTypeServices\AppleTypeServicesF65539 \cf3 APPLIED MACHINE LEARNING \'a0\'b7\'a0 SPRING 2026\
+\pard\pardeftab720\sl600\sa400\partightenfactor0
+
+\f2\b\fs48 \AppleTypeServices \cf2 MeterMind: Symbolic vs Learned Approaches to Metrical Compression in Iambic Pentameter\
+\pard\pardeftab720\sl504\sa400\partightenfactor0
+
+\f1\b0\fs28 \cf3 Andrew Li, Alexandra Jing\
+\pard\pardeftab720\sl544\partightenfactor0
+
+\fs32 \cf3 We investigate whether symbolic rule-based constraint-solving, learned neural sequence models, or large pretrained language models best handle the task of metrical compression, taking expanded archaic prose and rewriting it into iambic pentameter. Using Shakespeare's 154 sonnets as a corpus, we train and evaluate three models (a DP reorderer, a GRU with Bahdanau attention, and Claude Haiku) on three metrics: Metrical Accuracy (MA), Semantic Preservation (SP), and Grammaticality (G). We find that the symbolic DP reorderer leads on Metrical Accuracy (MA = 0.9996 \'b1 0.0064) and Semantic Preservation (SP = 0.9847 \'b1 0.0207) by construction, while Claude Haiku achieves the strongest Grammaticality score (G = 0.1475 \'b1 0.0246) and competitive MA (0.8680 \'b1 0.1600) and SP (0.8540 \'b1 0.1020) with no task-specific training. The GRU with Bahdanau attention substantially underperforms both baselines across all metrics (MA = 0.5476, SP = 0.2622, G = 0.0971), potentially reflecting severe overfitting on a dataset of only 1,164 training pairs. \
+\pard\pardeftab720\sl396\sa240\partightenfactor0
+
+\f0\b\fs22 \AppleTypeServices\AppleTypeServicesF65539 \cf3 CONTENTS\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sl468\sa120\partightenfactor0
+\ls1\ilvl0
+\fs26 \AppleTypeServices\AppleTypeServicesF65539 \cf2 \kerning1\expnd0\expndtw0 {\listtext	1.	}\expnd0\expndtw0\kerning0
+INTRODUCTION
+\f1\b0\fs28 \AppleTypeServices \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sl468\sa120\partightenfactor0
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \cf2 \kerning1\expnd0\expndtw0 {\listtext	2.	}\expnd0\expndtw0\kerning0
+RELATED WORK
+\f1\b0\fs28 \AppleTypeServices \
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \kerning1\expnd0\expndtw0 {\listtext	3.	}\expnd0\expndtw0\kerning0
+PROBLEM FORMULATION
+\f1\b0\fs28 \AppleTypeServices \
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \kerning1\expnd0\expndtw0 {\listtext	4.	}\expnd0\expndtw0\kerning0
+DATASET
+\f1\b0\fs28 \AppleTypeServices \
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \kerning1\expnd0\expndtw0 {\listtext	5.	}\expnd0\expndtw0\kerning0
+METHODS
+\f1\b0\fs28 \AppleTypeServices \
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \kerning1\expnd0\expndtw0 {\listtext	6.	}\expnd0\expndtw0\kerning0
+RESULTS
+\f1\b0\fs28 \AppleTypeServices \
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \kerning1\expnd0\expndtw0 {\listtext	7.	}\expnd0\expndtw0\kerning0
+ABLATIONS
+\f1\b0\fs28 \AppleTypeServices \
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \kerning1\expnd0\expndtw0 {\listtext	8.	}\expnd0\expndtw0\kerning0
+ANALYSIS
+\f1\b0\fs28 \AppleTypeServices \
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \kerning1\expnd0\expndtw0 {\listtext	9.	}\expnd0\expndtw0\kerning0
+QUALITATIVE DEMO
+\f1\b0\fs28 \AppleTypeServices \
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \kerning1\expnd0\expndtw0 {\listtext	10.	}\expnd0\expndtw0\kerning0
+LIMITATIONS
+\f1\b0\fs28 \AppleTypeServices \
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \kerning1\expnd0\expndtw0 {\listtext	11.	}\expnd0\expndtw0\kerning0
+CONCLUSION
+\f1\b0\fs28 \AppleTypeServices \
+\ls1\ilvl0
+\f0\b\fs26 \AppleTypeServices\AppleTypeServicesF65539 \kerning1\expnd0\expndtw0 {\listtext	12.	}\expnd0\expndtw0\kerning0
+REFERENCES
+\f1\b0\fs28 \AppleTypeServices \
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 1. Introduction\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \cf2 Iambic pentameter \'97 the 
+\f4\i da-DUM da-DUM da-DUM da-DUM da-DUM
+\f3\i0  rhythm of Shakespeare, Milton, and Keats \'97 is one of the most studied metrical forms in English literature. Its ten-syllable alternating stress pattern is simple to define but surprisingly difficult to produce. This tension makes iambic pentameter a compelling testbed for machine learning. The task requires simultaneously satisfying a hard phonological constraint (stress pattern), a soft semantic constraint (preserve meaning), and an implicit fluency constraint (sound like natural language). These three objectives often pull in different directions. \
+We frame the problem as metrical compression: given an expanded archaic prose version of a Shakespeare sonnet line, containing all the original words plus filler, can a model recover the compressed, metrically regular original? This controlled setup lets us isolate the metrical learning signal from the confound of vocabulary or register translation. \
+\pard\pardeftab720\sl612\partightenfactor0
+\cf2 Our central hypothesis is: 
+\f2\b symbolic stress constraints outperform learned approaches on Metrical Accuracy, but underperform on Semantic Preservation and Grammaticality, because explicit rule-following cannot model the contextual trade-offs that learned models capture.
+\f3\b0  \
+\
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 2. Related Work\
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Poetry generation with formal constraints\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 Generating formal verse poetry with strict constraints on meter, rhyme, and alliteration has been a long-standing challenge in NLP. The most directly relevant prior work is ByGPT5 (Belouadi & Eger, 2023), which argues for end-to-end style-conditioned poetry generation without hand-crafted constraints. The authors identify two failure modes of prior end-to-end attempts: insufficient training data, and a mismatch between subword tokenization and character-level poetic styles such as meter and rhyme. Their solution is ByGPT5, a token-free decoder-only transformer pre-trained at the byte level and fine-tuned on QuaTrain, a machine-labeled corpus of over 2.7 million English quatrains. ByGPT5 outperforms GPT-2, mT5, and ChatGPT on meter, rhyme, and alliteration scores, and achieves performance comparable to human poets on meter in human evaluation. Crucially, Belouadi and Eger find that meter \'97 being a syllable-level style \'97 is learnable by subword models too, but that token-free models have a systematic advantage. Their finding that end-to-end approaches can match symbolic pipelines on meter directly motivates our investigation: we ask whether this holds when the vocabulary is severely constrained (archaic Shakespearean English) and the task is framed as compression rather than open-ended generation. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Seq2seq with attention\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 Our Model 2 is built on the encoder-decoder framework with Bahdanau attention (Bahdanau, Cho & Bengio, 2015), the foundational architecture for learned sequence-to-sequence transduction. Bahdanau et al. identified a critical bottleneck in the basic encoder-decoder approach: compressing a variable-length source into a single fixed-length vector degrades performance on long sequences. Their solution, allowing the decoder to compute a soft alignment over all encoder hidden states at each generation step, is particularly well-motivated for our reordering task. When generating position 
+\f4\i i
+\f3\i0  of the output, the attention mechanism can in principle learn to focus on whichever input word belongs at that position, effectively learning a soft permutation. This maps directly onto what our symbolic DP reorderer does explicitly, making the attention GRU a natural learned counterpart to the rule-based baseline. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Constrained text generation\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 A consistent finding across poetry generation literature is that unconstrained neural models struggle to satisfy hard phonological constraints from data alone. Hopkins and Kiela (2017) used Weighted Finite State Transducers to enforce metric constraints and roll back generation on violations. Van de Cruys (2020) modified output probability distributions directly to bias generation toward desired stress patterns. Our copy mask which restricts the GRU decoder's output vocabulary to words present in the source input is a form of hard lexical constraint at inference time. Belouadi and Eger (2023) note that such prior knowledge injection, while effective, introduces cascading errors when constraints interact and limits the model's ability to learn holistic trade-offs. Our ablation (Ablation 2) directly tests this: does the copy constraint help or hinder the GRU's ability to produce metrically and semantically appropriate output? \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Computational meter and the CMU Pronouncing Dictionary\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 Automated metrical analysis relies on mapping orthographic words to their phonemic stress patterns. The standard tool for this in English NLP is the CMU Pronouncing Dictionary, a hand-compiled lexicon of over 125,000 words with phonetic transcriptions encoding primary stress (1), secondary stress (2), and unstressed (0) syllables (Mehra & Susan, 2020). We use CMU as the backbone of our Metrical Accuracy metric and our DP reorderer. A known limitation, directly relevant to our corpus, is that CMU covers modern English and is incomplete for archaic verb forms. Words like 
+\f4\i feedest
+\f3\i0  and 
+\f4\i makest
+\f3\i0  \'97 produced by our elision expansion pipeline \'97 are absent from CMU, requiring a fallback strategy of stripping the archaic 
+\f4\i -est
+\f3\i0  and 
+\f4\i -eth
+\f3\i0  suffixes and looking up the verbal root. Mehra and Susan demonstrate that CMU-based phoneme extraction is robust for standard English but degrades on out-of-vocabulary words, a limitation we acknowledge in our evaluation. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Evaluation metrics: semantic similarity and grammaticality\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 Our Semantic Preservation metric uses cosine similarity between SBERT embeddings (Reimers & Gurevych, 2019). Standard BERT embeddings are unsuitable for this purpose: Reimers and Gurevych demonstrate that averaging BERT output layers yields an average Spearman correlation of only 54.81 on semantic textual similarity tasks \'97 worse than averaging GloVe embeddings. SBERT addresses this by fine-tuning BERT in a siamese network architecture on natural language inference data, producing embeddings where semantically similar sentences are geometrically close in vector space and can be meaningfully compared with cosine similarity. SBERT achieves an average Spearman correlation of 74.89 across seven STS benchmarks, outperforming prior sentence embedding methods by 11.7 points. Cosine similarity between SBERT embeddings is therefore a principled and well-validated measure of semantic preservation \'97 the degree to which the meaning of the output line matches the input prose. \
+Our Grammaticality metric uses GPT-2 perplexity (Radford et al., 2019), normalised as 
+\f4\i G = 1 / (1 + log(perplexity))
+\f3\i0 . Radford et al. show that GPT-2, trained on 40GB of diverse web text, achieves state-of-the-art performance on 7 out of 8 language modeling benchmarks in a zero-shot setting, establishing it as a robust proxy for naturalness and fluency across domains. Lower perplexity indicates text that is more consistent with the language distributions GPT-2 learned, which we use as a proxy for grammaticality and fluency. We acknowledge a known limitation: GPT-2 was trained on modern English and will systematically assign higher perplexity to archaic register (thee, thou, doth) regardless of grammatical correctness within Early Modern English. This means our G scores may underestimate the true fluency of model outputs that successfully preserve Shakespearean register, which is a limitation we discuss in Section 10. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Pretrained LLMs as a comparison point\
+\pard\pardeftab720\sl612\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 Our three models represent three fundamentally different paradigms for the metrical compression task: symbolic rule-following (DP), task-specific learning from examples (GRU), and implicit knowledge transfer from pretraining (Claude). The third paradigm is motivated by a key question: does broad exposure to text including poetry, without any task-specific training, transfer to a highly constrained structured generation task? This is a meaningful research question independent of which specific LLM is used. Claude Haiku, as a large pretrained language model, has been exposed to vast quantities of English poetry during pretraining and has implicit knowledge of iambic meter, stress patterns, and Shakespearean register. Prompting it zero-shot tests the ceiling of what pretrained knowledge alone can achieve on this task, providing a natural upper-bound comparison for both the symbolic and learned baselines. \
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 3. Problem Formulation\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \cf2 We define the task as a sequence-to-sequence mapping. Let 
+\f4\i x
+\f3\i0  be an expanded archaic prose line and 
+\f4\i y
+\f3\i0  be the corresponding compressed Shakespeare line. All words in 
+\f4\i y
+\f3\i0  appear verbatim in 
+\f4\i x
+\f3\i0 ; 
+\f4\i x
+\f3\i0  may contain additional filler words added to make the expansion read naturally. \
+\pard\pardeftab720\sl540\partightenfactor0
+
+\f5\fs27 \cf2 \cb4 Input x : "Thou feedest thy light's own flame with fuel that is self-substantial"\cb1 \
+\cb4 Output y : "Feedest thy light's flame with self-substantial fuel"\cb1 \
+\
+\cb4 Objective : learn f : x \uc0\u8594  y that maximises MA while preserving SP and G \
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\fs34 \cf2 \cb1 We evaluate all models on three metrics:\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3546\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2880
+\clvertalc \clshdrawnil \clwWidth8818\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx5760
+\clvertalc \clshdrawnil \clwWidth1475\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 METRIC\cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 DEFINITION\cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 RANGE\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth3546\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth8818\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1475\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\fs28 \AppleTypeServices \cf2 MA
+\f1\b0  \'97 Metrical Accuracy\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 Fraction of template syllable positions correctly filled, using CMU stress patterns\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 [0, 1]\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth3546\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth8818\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1475\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f0\b \cf2 SP
+\f1\b0  \'97 Semantic Preservation\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 Cosine similarity between SentenceTransformer embeddings of input and output\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 [0, 1]\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth3546\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2880
+\clvertalt \clshdrawnil \clwWidth8818\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx5760
+\clvertalt \clshdrawnil \clwWidth1475\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f0\b \cf2 G
+\f1\b0  \'97 Grammaticality\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 Normalised GPT-2 perplexity: 1 / (1 + log(perplexity))\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 [0, 1]\cell \lastrow\row
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 4. Dataset\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \cf2 We use Shakespeare's 154 sonnets from Project Gutenberg as our poetry corpus. After stripping Gutenberg headers and Roman numeral sonnet headings, the corpus yields 2,155 lines. Elisions common in Early Modern English (
+\f4\i Feed'st
+\f3\i0 , 
+\f4\i distill'd
+\f3\i0 , 
+\f4\i o'er
+\f3\i0 ) were expanded to their full forms using 14 regex rules operating on Unicode-normalised text, producing a clean line corpus with no apostrophe contractions. \
+Each line was then expanded into three distinct archaic prose paraphrases using Claude Haiku via the Anthropic API. The prompt required all original words to appear verbatim in the expansion while preserving archaic register (thee, thou, doth, hath). Expansions failing word-presence validation were retried and discarded if still invalid, yielding 
+\f2\b 1,455 valid (input, target) pairs out of 6,465, 
+\f3\b0 so roughly 2/3rds of the lines failed. The most likely cause is the model consistently dropping small words like a, the, and, in form the expansions, which trips up validator even when expansion is otherwise good. We\'92ve also programmed it to rerun batch of three if a single expansion fails, so that also may have contributed to the problem. Regardless, the dataset was split 80/10/10 on unique target lines to prevent data leakage across splits. \
+\pard\pardeftab720\sl600\partightenfactor0
+
+\f6\i\fs30 \cf3 Original: "Feed'st thy light's flame with self-substantial fuel,"\
+Expanded (1): "Thou feedest thy light's own flame with fuel that is self-substantial,"\
+Expanded (2): "And feedest the flame of thy light with fuel that is self-substantial,"\
+Expanded (3): "Feedest thou thy light's own flame with self-substantial fuel alone," \
+\pard\pardeftab720\sl390\qc\partightenfactor0
+
+\f1\i0\fs26 \cf3 \
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 5. Methods\
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Model 1 \'97 Rule-Based DP Reorderer\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 Our symbolic baseline uses the CMU Pronouncing Dictionary to look up the stress pattern of each input word, then applies bitmask dynamic programming to find the globally optimal word ordering with respect to the iambic template 
+\f5\fs28\fsmilli14450 \cb4 [0,1,0,1,0,1,0,1,0,1]
+\f3\fs34 \cb1 . Monosyllabic stressed words are treated as positionally flexible. Archaic verb forms not in CMU (
+\f4\i feedest
+\f3\i0 , 
+\f4\i makest
+\f3\i0 ) are handled by stripping the 
+\f4\i -est
+\f3\i0  or 
+\f4\i -eth
+\f3\i0  suffix and looking up the root. The DP is capped at 20 words (2
+\fs28\fsmilli14167 \super 20
+\fs34 \nosupersub  states) for tractability. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Model 2 \'97 GRU Encoder-Decoder with Bahdanau Attention\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 Our learned baseline is a PyTorch seq2seq model with a single-layer GRU encoder and a single-layer GRU decoder with Bahdanau attention. The encoder produces a hidden state at every input position; at each decoder step, attention computes a weighted sum of encoder states to form a context vector. The decoder generates one word at a time, attending to whichever input words are most relevant for the current output position. We use embedding dimension 128, hidden dimension 256, dropout 0.3, teacher forcing ratio 0.5, and train for 50 epochs with Adam (lr=0.001) and gradient clipping at 1.0. At inference, a copy mask restricts output vocabulary to source words, and a repetition penalty discourages reuse. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Model 3 \'97 Claude Haiku (Zero-Shot LLM)\
+\pard\pardeftab720\sl612\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 Our third model prompts Claude Haiku zero-shot with a structured instruction: use only input words, preserve archaic register, aim for the 
+\f4\i da-DUM da-DUM
+\f3\i0  pattern, return only the rewritten line. No examples are provided. This tests whether a large pretrained model's implicit knowledge of English poetry and prosody transfers to this task without any task-specific training. \
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 6. Results\
+\pard\pardeftab720\sl612\qc\partightenfactor0
+
+\f3\b0\fs34 \cf2 \
+\pard\pardeftab720\sl390\qc\partightenfactor0
+
+\f1\fs26 \cf3 Figure 2. Mean MA, SP, and G scores (\'b1 std) across all three models on 147 shared test pairs. Error bars show \'b1 1 std.\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth3484\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalc \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalc \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 MODEL\cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 MA 
+\f7 \AppleTypeServices \uc0\u8593 
+\f0 \AppleTypeServices\AppleTypeServicesF65539 \cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 SP 
+\f7 \AppleTypeServices \uc0\u8593 
+\f0 \AppleTypeServices\AppleTypeServicesF65539 \cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 G 
+\f7 \AppleTypeServices \uc0\u8593 
+\f0 \AppleTypeServices\AppleTypeServicesF65539 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth3484\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f1\b0\fs28 \AppleTypeServices \cf2 DP Reorderer\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f0\b \cf2 0.9996 \'b1 0.0064\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 0.9847 \'b1 0.0207\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f1\b0 \cf2 0.1387 \'b1 0.0175\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth3484\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 GRU + Attention\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 0.5476 \'b1 0.2631\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 0.2622 \'b1 0.0908\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 0.0971 \'b1 0.0054\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth3484\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth3451\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 Claude Haiku\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 0.8680 \'b1 0.1600\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 0.8540 \'b1 0.1020\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f0\b \cf2 0.1475 \'b1 0.0246\cell \lastrow\row
+\pard\pardeftab720\sl612\qc\partightenfactor0
+
+\f3\b0\fs34 \cf2 \
+\pard\pardeftab720\sl390\qc\partightenfactor0
+
+\f1\fs26 \cf3 Figure 3. Radar chart showing each model's profile across MA, SP, and G. The DP and Claude fill most of the upper triangle; the GRU's small polygon reflects low scores across all three metrics.\
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 7. Ablations (In Model 2 GRU)\
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Ablation 1 \'97 Attention vs No Attention\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 To test whether the attention mechanism contributes meaningfully to the GRU's performance, we trained an identical model replacing the Bahdanau attention decoder with a plain decoder that receives only the encoder's final hidden state. Results are shown in Figure 4 and the table below. \
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2335\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalc \clshdrawnil \clwWidth4146\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth4959\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalc \clshdrawnil \clwWidth2399\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 METRIC\cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 WITH ATTENTION\cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 WITHOUT ATTENTION\cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 \uc0\u916 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth2335\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth4146\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth4959\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2399\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f1\b0\fs28 \AppleTypeServices \cf2 MA 
+\f8 \uc0\u8593 
+\f1 \cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f0\b \cf2 0.5476\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f1\b0 \cf2 0.2612\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 +0.2864\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth2335\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth4146\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth4959\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2399\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 SP 
+\f8 \uc0\u8593 
+\f1 \cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f0\b \cf2 0.2622\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f1\b0 \cf2 0.2134\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 +0.0488\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth2335\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth4146\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth4959\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2399\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 G 
+\f8 \uc0\u8593 
+\f1 \cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 0.0971\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f0\b \cf2 0.1289\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f1\b0 \cf2 \uc0\u8722 0.0318\cell \lastrow\row
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\fs34 \cf2 Attention wins decisively on MA (+0.2864) and meaningfully on SP (+0.0488). The plain GRU's marginally better G score is not a sign of higher quality: without attention, the model appears to generate shorter, simpler, more modern-sounding sequences that happen to score lower perplexity under GPT-2, which was trained on modern English. This is precisely the confound identified in Section 3, that G is an unreliable discriminator for archaic text. Both models exhibit severe overfitting: by epoch 50 training loss reaches 0.0569 while validation loss climbs to 8.36 for the plain GRU (best val loss 6.265), confirming that 1,164 training pairs is insufficient for this task regardless of architecture. \
+We re-ran GRU inference on the test set without the source vocabulary mask, allowing the model to generate any word in its vocabulary. No retraining was needed. Results are shown in Figure 5 and the table below. \
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalc \clshdrawnil \clwWidth2814\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalc \clshdrawnil \clwWidth4699\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalc \clshdrawnil \clwWidth3720\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalc \clshdrawnil \clwWidth2606\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw40\brdrcf2 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 METRIC\cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 WITHOUT MASK\cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 WITH MASK\cell 
+\pard\intbl\itap1\pardeftab720\sl432\partightenfactor0
+\cf2 \uc0\u916 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth2814\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth4699\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3720\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2606\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f1\b0\fs28 \AppleTypeServices \cf2 MA 
+\f8 \uc0\u8593 
+\f1 \cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f0\b \cf2 0.548\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f1\b0 \cf2 0.333\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 +0.215\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth2814\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth4699\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3720\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2606\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrs\brdrw20\brdrcf5 \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 SP 
+\f8 \uc0\u8593 
+\f1 \cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f0\b \cf2 0.262\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f1\b0 \cf2 0.248\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 +0.014\cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth2814\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx2160
+\clvertalt \clshdrawnil \clwWidth4699\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx4320
+\clvertalt \clshdrawnil \clwWidth3720\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx6480
+\clvertalt \clshdrawnil \clwWidth2606\clftsWidth3 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadt200 \clpadl280 \clpadb200 \clpadr280 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 G 
+\f8 \uc0\u8593 
+\f1 \cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+\cf2 0.097\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f0\b \cf2 0.130\cell 
+\pard\intbl\itap1\pardeftab720\sl504\partightenfactor0
+
+\f1\b0 \cf2 \uc0\u8722 0.033\cell \lastrow\row
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\fs34 \cf2 Removing the mask substantially improves both MA (+0.215) and SP (+0.014). The copy mask was intended to enforce meaning preservation by restricting generation to source vocabulary, but instead caused destructive early termination: the mask narrows the output distribution to source words, while the repetition penalty simultaneously penalises tokens already generated, leaving the end-of-sequence token as the highest-scoring option after just 2\'963 words. Masked outputs degraded into fragments such as 
+\f5\fs28\fsmilli14450 \cb4 "the as a"
+\f3\fs34 \cb1  and 
+\f5\fs28\fsmilli14450 \cb4 "and by hath\'94
+\f3\fs34 \cb1 ,  formally compliant with the mask but semantically empty. This is a concrete instance of the constraint interaction failure mode identified by Belouadi & Eger (2023): independently sensible decoding constraints can compose destructively. \
+\pard\pardeftab720\sl612\qc\partightenfactor0
+\cf2 \
+\pard\pardeftab720\sl390\qc\partightenfactor0
+
+\f1\fs26 \cf3 Figure 4. Ablation 1: GRU with attention vs plain GRU across MA, SP, and G. Attention wins on both MA (+0.2864) and SP (+0.0488); plain GRU's marginally better G (\uc0\u8722 0.0318) reflects shorter modern-sounding outputs rather than genuine fluency.\
+\pard\pardeftab720\sl612\qc\partightenfactor0
+
+\f3\fs34 \cf2 \
+\pard\pardeftab720\sl390\qc\partightenfactor0
+
+\f1\fs26 \cf3 Figure 5. Ablation 2: GRU without copy mask vs with copy mask. Removing the mask substantially improves MA and SP, confirming the destructive interaction between the mask and repetition penalty.\
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 8. Analysis\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \cf2 The results reveal a clear three-way split that maps directly onto the architectural assumptions of each model. We address each in turn. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Why does the DP score near-perfectly on MA?\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 The DP reorderer achieves MA = 0.9996 because it optimises directly for the iambic template 
+\f5\fs28\fsmilli14450 \cb4 [0,1,0,1,0,1,0,1,0,1]
+\f3\fs34 \cb1  via exhaustive bitmask search. However, two structural features of the dataset also inflate DP's MA. First, the input lines are expansions of iambic pentameter targets, meaning the source vocabulary already contains words whose stress patterns fit the template. Second, archaic monosyllables like 
+\f4\i thee
+\f3\i0 , 
+\f4\i thou
+\f3\i0 , 
+\f4\i thy
+\f3\i0 , 
+\f4\i doth
+\f3\i0 , 
+\f4\i hath
+\f3\i0  dominate the vocabulary and are treated as positionally flexible by the metric, making them trivially easy to place. DP's high MA may therefore overstate its usefulness on genuinely unstructured prose input. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Why does the DP score high SP but low G?\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 SP is guaranteed by construction: the DP never adds or removes words, so the output vocabulary is a strict subset of the input vocabulary, keeping cosine similarity between SentenceTransformer embeddings very high. Low G follows from the same mechanism. Globally optimal metric reordering can produce syntactically bizarre sequences, like adjectives placed after nouns or verbs stranded from their subjects, that satisfy the stress template perfectly but violate English phrase-structure rules. GPT-2, which models syntactic and collocational probability, assigns high perplexity to these sequences even when they are technically grammatical in archaic register. DP's G = 0.1387 confirms that metric-optimal word order is not the same as linguistically natural word order. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Why does the GRU score low SP despite being trained on the task?\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 The GRU's SP = 0.2622 is the most striking failure. A model trained on (input, target) pairs should, in principle, learn to preserve meaning, as the targets it is trained to produce are paraphrases of the inputs. The explanation is severe overfitting: with only 1,164 training pairs from a narrow stylistic domain, the model memorises surface patterns in the training set rather than learning a generalisable reordering function. At inference on unseen lines, it generates words that match learned stress-conditioned n-gram patterns but are semantically unrelated to the specific input. The attention ablation confirms that the attention mechanism mitigates this somewhat (+0.0488 SP), but cannot overcome the fundamental data scarcity problem. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Why does Claude substantially outperform the GRU?\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 Claude Haiku achieves MA = 0.8680 and SP = 0.8540 with zero task-specific training. The gap over the GRU (\uc0\u916 MA = +0.3204, \u916 SP = +0.5918) is large enough to qualify as a different regime of performance. Two factors explain this. First, pretraining scale: Claude has been exposed to vast quantities of English poetry, prosody guides, and Shakespearean text, giving it implicit phonological and metrical knowledge the GRU must learn from 1,164 examples. Second, the zero-shot prompt is semantically richer than the GRU's training signal \'97 it explicitly encodes the da-DUM constraint, the copy-words requirement, and the register preservation goal in natural language, whereas the GRU learns these constraints implicitly from (input, output) pairs alone. This raises a natural follow-up question: would fine-tuning Claude on this task further improve performance, or would it overfit similarly to the GRU given the small dataset? \
+However, it must be noted that Claude has a severe problem of adding additional to the output, not respecting the rule that only original input words may be used. \
+\pard\pardeftab720\sl432\sa200\partightenfactor0
+
+\f0\b\fs24 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Why is G uninformative across all three models?\
+\pard\pardeftab720\sl612\partightenfactor0
+
+\f3\b0\fs34 \AppleTypeServices \cf2 All three models score G in the range 0.0971\'960.1475 \'97 a spread too narrow to draw meaningful conclusions. The explanation is structural: GPT-2 was trained on modern web text and assigns uniformly high perplexity to Early Modern English regardless of the grammatical quality of the specific output. A correctly formed Shakespearean clause like 
+\f4\i "doth beauty's legacy bequeath"
+\f3\i0  scores similarly to a garbled fragment under GPT-2 because both are outside its training distribution. G is better understood as a measure of modernity than of grammaticality in this domain. Future work should replace GPT-2 with a language model fine-tuned on Early Modern English (e.g. on the EEBO corpus) to obtain a more informative grammaticality signal. \
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 9. Qualitative Demo\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \cf2 We ran all three models on five lines drawn from Milton's 
+\f4\i Areopagitica
+\f3\i0 , chosen to test performance on archaic philosophical prose outside the Shakespeare training domain. \
+Demo!
+\f1\fs26 \cf3 \
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 10. Limitations\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \cf2 Several limitations bound the scope of our conclusions. First, the dataset is small: 1,455 training pairs drawn from a single author's work limits generalisability. The 77% validation filter failure rate during data generation suggests the LLM expansion task is harder than anticipated and may have introduced systematic bias toward simpler lines, since we were originally drawing from a 6,465 pairs. \
+Second, the archaic vocabulary of the training corpus means the GRU's learned representations are narrow \'97 performance on modern prose is expected to degrade significantly. The demo section illustrates this; the copy mask partially mitigates but does not eliminate out-of-vocabulary issues. \
+\pard\pardeftab720\sl612\partightenfactor0
+\cf2 Third, the Grammaticality metric (GPT-2 perplexity) was trained on modern English and systematically disadvantages archaic outputs regardless of their actual linguistic quality within the Early Modern English register. \
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 11. Conclusion\
+\pard\pardeftab720\sl612\sa400\partightenfactor0
+
+\f3\b0\fs34 \cf2 We set out to test whether symbolic rule-based constraint-solving, learned neural sequence models, or large pretrained language models best handle metrical compression into iambic pentameter. Our central hypothesis \'97 that symbolic approaches would lead on Metrical Accuracy but underperform on Semantic Preservation and Grammaticality \'97 was partially confirmed, but with a significant revision: the LLM baseline came far closer to the symbolic system than anticipated, while the learned GRU baseline fell far below both. \
+The most surprising finding is the magnitude of Claude Haiku's zero-shot performance. With no task-specific training, Claude achieves SP = 0.854 \'97 a result the GRU, trained on 1,164 (input, target) pairs, cannot approach. This suggests that for highly constrained structured generation tasks with small training sets, a prompted LLM is not merely a convenient baseline but a genuinely competitive method. The GRU result, meanwhile, illustrates how rapidly seq2seq models can overfit on narrow corpora: the model learns the stress register of Shakespearean English but not the meaning-preserving reordering function it is trained to perform. \
+Were we to repeat this project, we would focus on three changes. First, expand the dataset significantly \'97 either by sourcing additional Early Modern English poetry or by using LLM-generated synthetic pairs more aggressively. Second, replace GPT-2 with a domain-appropriate language model (fine-tuned on EEBO or similar) to obtain a meaningful Grammaticality signal. Third, investigate whether fine-tuning Claude on the task, rather than prompting it zero-shot, improves or hurts performance given the small dataset. \
+\pard\pardeftab720\sl612\partightenfactor0
+\cf2 Future work could extend this framework to other metrical forms (ballad meter, alexandrine, haiku syllabic constraints) to test whether the same paradigm rankings hold across constraint types. The metrical compression framing \'97 where the target vocabulary is constrained to source words \'97 also provides a clean experimental design that could be reused for studying other structured rewriting tasks. \
+\pard\pardeftab720\sl583\sa400\partightenfactor0
+
+\f2\b\fs32\fsmilli16200 \cf2 References\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sl476\sa200\partightenfactor0
+\ls2\ilvl0
+\f1\b0\fs28 \cf2 \kerning1\expnd0\expndtw0 {\listtext	1.	}\expnd0\expndtw0\kerning0
+Bahdanau, D., Cho, K., & Bengio, Y. (2015). Neural Machine Translation by Jointly Learning to Align and Translate. 
+\f9\i Proceedings of ICLR 2015
+\f1\i0 . arXiv:1409.0473.\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 {\listtext	2.	}\expnd0\expndtw0\kerning0
+Belouadi, J., & Eger, S. (2023). ByGPT5: End-to-End Style-conditioned Poetry Generation with Token-free Language Models. 
+\f9\i Proceedings of ACL 2023
+\f1\i0 , pp. 7364\'967381.\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 {\listtext	3.	}\expnd0\expndtw0\kerning0
+Mehra, S., & Susan, S. (2020). Improving Word Recognition in Speech Transcriptions by Decision-level Fusion of Stemming and Two-way Phoneme Pruning. 
+\f9\i International Advanced Computing Conference (IACC)
+\f1\i0 .\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 {\listtext	4.	}\expnd0\expndtw0\kerning0
+Lau, J. H., Cohn, T., Baldwin, T., Brooke, J., & Hammond, A. (2018). Deep-speare: A Joint Neural Model of Poetic Language, Meter and Rhyme. 
+\f9\i Proceedings of ACL 2018
+\f1\i0 , pp. 1948\'961958.\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 {\listtext	5.	}\expnd0\expndtw0\kerning0
+Hopkins, J., & Kiela, D. (2017). Automatically Generating Rhythmic Verse with Neural Networks. 
+\f9\i Proceedings of ACL 2017
+\f1\i0 , pp. 168\'96178.\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 {\listtext	6.	}\expnd0\expndtw0\kerning0
+Van de Cruys, T. (2020). Automatic Poetry Generation from Prosaic Text. 
+\f9\i Proceedings of ACL 2020
+\f1\i0 , pp. 2471\'962480.\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 {\listtext	7.	}\expnd0\expndtw0\kerning0
+Tian, Y., & Peng, N. (2022). Zero-shot Sonnet Generation with Discourse-level Planning and Aesthetics Features. 
+\f9\i Proceedings of NAACL 2022
+\f1\i0 , pp. 3587\'963597.\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 {\listtext	8.	}\expnd0\expndtw0\kerning0
+Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. 
+\f9\i Proceedings of EMNLP-IJCNLP 2019
+\f1\i0 , pages 3982\'963992, Hong Kong.\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 {\listtext	9.	}\expnd0\expndtw0\kerning0
+Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., & Sutskever, I. (2019). Language Models are Unsupervised Multitask Learners. 
+\f9\i OpenAI Blog
+\f1\i0 .\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 {\listtext	10.	}\expnd0\expndtw0\kerning0
+CMU Pronouncing Dictionary. Carnegie Mellon University. Available at: http://www.speech.cs.cmu.edu/cgi-bin/cmudict\
+}
